@@ -1,0 +1,45 @@
+name: Customize repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      from_name:
+        description: 'From name'
+        required: true
+      to_name:
+        description: 'To name'
+        required: true
+
+# Reference: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
+permissions:
+  # Need `contents: read` to checkout the repository.
+  # Need `contents: write` to update the step metadata.
+  contents: write
+
+jobs:
+
+  configure:
+    name: Replace from_name with to_name in all .md files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Replace string in .md
+        run: |
+          find . -type f -name "*.md" -exec sed -i "s/${{ inputs.from_name }}/${{ inputs.to_name }}/g" {} +
+
+      - name: Replace string in .html
+        run: |
+          find . -type f -name "*.html" -exec sed -i "s/${{ inputs.from_name }}/${{ inputs.to_name }}/g" {} +
+
+      - name: Set step to 0
+        run: echo "0" > ./.github/steps/-step.txt
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "info@github.com"
+          git add .
+          git commit -m "Replace ${{ inputs.from_name }} with ${{ inputs.to_name }}"
+          git push
