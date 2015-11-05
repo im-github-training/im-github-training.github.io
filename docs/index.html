@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Training Manual</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+  <!-- Theme: Vue -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/docsify/lib/themes/vue.css"> -->
+  <link rel="stylesheet" href="./css/light.css">
+  <link rel="stylesheet" href="./css/dark.css">
+  <link rel="stylesheet" href="./css/common.css">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/quizdown@latest/public/build/quizdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quizdown@latest/public/build/extensions/quizdownKatex.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quizdown@latest/public/build/extensions/quizdownHighlight.js"></script>
+  <script>quizdown.register(quizdownHighlight).register(quizdownKatex).init()</script>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      search: 'auto',
+      auto2top: true,
+      loadSidebar: true,
+      name: 'InfoMagnus GitHub Training',
+      repo: '',
+      themeColor: '#0366d6',
+      paths: 'auto',
+      noCompileLinks: ['book.pdf'],
+      maxLevel: 0,
+      subMaxLevel: 3,
+      relativePath: false,
+
+      // PLUGIN SETTINGS
+      // -----------------------------------------------------------------
+      // Search Plugin Configuration
+      search: {
+        placeholder: 'Type to search',
+        noData: 'No matches found.',
+        // Headline depth, 1 - 6
+        depth: 4,
+      },
+      pagination: {
+        previousText: 'PREV',
+        nextText: 'NEXT',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+      plugins: [
+        // Dark mode
+        function(hook) {
+          hook.doneEach(function(html, next) {
+            const darkMode = localStorage.getItem("dark_mode") == "true"
+            const darkModeSwitch = document.querySelector("#dark_mode_switch");
+            darkModeSwitch.checked = darkMode;
+            document.styleSheets[1].disabled = !darkMode;
+            document.styleSheets[0].disabled = darkMode;
+            darkModeSwitch.addEventListener('change', (event) => {
+              document.styleSheets[1].disabled = !darkModeSwitch.checked;
+              document.styleSheets[0].disabled = darkModeSwitch.checked;
+              localStorage.setItem("dark_mode", darkModeSwitch.checked ? "true" : "false")
+            })
+            next(html);
+
+          });
+        },
+
+        // Quizdown
+        function(hook) {
+          hook.doneEach(function () {
+            let node = document.getElementsByClassName('quizdown');
+            const config = {
+              'locale': 'en',
+              'shuffleAnswers': false,
+              'primaryColor': '#24ae1dff',
+            };
+            for (let i = 0; i < node.length; i++) {
+              import(`./docs/quizzes/${node[i].firstElementChild.id}`).then(module => {
+                const { rawQuizdown } = module;
+                quizdown.createApp(rawQuizdown, node[i], config);
+              }).catch(error => {
+                console.error("Error importing quiz, make sure the file name matches the quizdown inner div's id: ", error);
+              });
+            }
+          });
+        }
+      ]
+    }
+  </script>
+
+  <!-- Required: docsify -->
+  <script src="https://unpkg.com/docsify/lib/docsify.min.js"></script>
+
+  <!-- docsify plugins -->
+  <script src="https://unpkg.com/docsify/lib/plugins/search.min.js"></script>
+  <script src="https://unpkg.com/docsify-copy-code"></script>
+  <script src="https://unpkg.com/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
+
+  <!-- Prism syntax highlighting -->
+  <script src="https://unpkg.com/prismjs/components/prism-bash.min.js"></script>
+  <script src="https://unpkg.com/prismjs/components/prism-git.min.js"></script>
+  <script src="https://unpkg.com/prismjs/components/prism-powershell.min.js"></script>
+  <script src="https://unpkg.com/prismjs/components/prism-shell-session.min.js"></script>
+  <script src="https://unpkg.com/prismjs/components/prism-yaml.min.js"></script>
+
+  <!-- Mermaid.js plugin -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      'theme': 'default',
+      'themeVariables': {
+        'git0': '#6C8EBF',
+        'git1': '#D79B00',
+        'git2': '#82B366',
+        'gitBranchLabel0': 'white',
+        'gitBranchLabel1': 'white',
+        'gitBranchLabel2': 'white',
+      }
+    });
+    window.mermaid = mermaid;
+  </script>
+  <script src="//unpkg.com/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
+</body>
+</html>
