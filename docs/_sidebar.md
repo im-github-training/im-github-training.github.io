@@ -23,7 +23,7 @@
     - [What is GitHub?](./docs/basic/github/what-is-github.md)
     - [Repositories](./docs/basic/github/repositories.md)
     - [Pull Requests](./docs/basic/github/pull_requests.md)
-    - [Workflows](./docs/basic/github/github_flow.md)
+    - [Branching Strategies](./docs/basic/github/github_flow.md)
     <!-- - [Markdown](./docs/basic/github/markdown.md) -->
     - Administration
       - [Fixing Mistakes](./docs/basic/github/fixing-mistakes.md)
